@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExchangeRateOffers.Api", "src\ExchangeRateOffers.Api\ExchangeRateOffers.Api.csproj", "{19B2C75D-A439-4218-9C7B-1237012ADB79}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19B2C75D-A439-4218-9C7B-1237012ADB79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19B2C75D-A439-4218-9C7B-1237012ADB79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19B2C75D-A439-4218-9C7B-1237012ADB79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19B2C75D-A439-4218-9C7B-1237012ADB79}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{19B2C75D-A439-4218-9C7B-1237012ADB79} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {029D897B-B1B8-4E8C-9DF6-64102D000927}
+	EndGlobalSection
+EndGlobal
