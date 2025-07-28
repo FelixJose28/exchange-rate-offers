@@ -1,14 +1,8 @@
 ﻿using ExchangeRateOffers.Api.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net;
+using System.Net.Http.Json;
 
 namespace ExchangeRateOffers.Tests.Controllers;
 
@@ -42,7 +36,7 @@ public class ExchangeRateControllerTests : IClassFixture<WebApplicationFactory<P
     [Fact]
     public async Task Compare_ReturnsBadRequest_WhenValidationFails()
     {
-        // Arrange: Invalid currency format (lowercase, not 3 chars)
+        // Arrange
         var request = new ExchangeRateRequest("us", "eur", -5);
 
         // Act
@@ -59,17 +53,21 @@ public class ExchangeRateControllerTests : IClassFixture<WebApplicationFactory<P
     [Fact]
     public async Task Compare_ReturnsNotFound_WhenAllProvidersFail()
     {
-        // Arrange: Use improbable currency to trigger empty result (depends on live APIs)
+        // Arrange
         var request = new ExchangeRateRequest("XXX", "YYY", 100);
 
         // Act
         var response = await _client.PostAsJsonAsync("/exchange-rate/compare", request);
 
         // Assert
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
-        var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        var problemDetails = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         Assert.NotNull(problemDetails);
-        Assert.Equal("No offers found", problemDetails.Title);
+        Assert.Equal("Validation failed.", problemDetails.Title);
+        Assert.Contains("SourceCurrency", problemDetails.Errors.Keys);
+        Assert.Contains("TargetCurrency", problemDetails.Errors.Keys);
+        Assert.Contains("Source currency code is not valid.", problemDetails.Errors["SourceCurrency"]);
+        Assert.Contains("Target currency code is not valid.", problemDetails.Errors["TargetCurrency"]);
     }
 }

@@ -3,11 +3,6 @@ using ExchangeRateOffers.Api.Application.Services;
 using ExchangeRateOffers.Api.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExchangeRateOffers.Tests.Application;
 
@@ -16,7 +11,7 @@ public class CompareExchangeRatesServiceTests
     private readonly Mock<ILogger<CompareExchangeRatesService>> _loggerMock = new();
 
     [Fact]
-    public async Task GetBestRateAsync_ReturnsHighestRate()
+    public async Task GetBestRateAsync_WhenMultipleProviders_ReturnsHighestConvertedRate()
     {
         // Arrange
         var request = new ExchangeRateRequest("USD", "EUR", 100);
@@ -48,7 +43,7 @@ public class CompareExchangeRatesServiceTests
     }
 
     [Fact]
-    public async Task GetBestRateAsync_AllProvidersReturnNull_ReturnsNull()
+    public async Task GetBestRateAsync_WhenAllProvidersReturnNull_ReturnsNull()
     {
         // Arrange
         var request = new ExchangeRateRequest("USD", "EUR", 100);
