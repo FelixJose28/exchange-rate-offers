@@ -6,6 +6,9 @@ using System.Net;
 
 namespace ExchangeRateOffers.Api.Controllers;
 
+/// <summary>
+/// Handles exchange rate comparison requests.
+/// </summary>
 [ApiController]
 [Route("exchange-rate")]
 public class ExchangeRateController : ControllerBase
@@ -16,6 +19,12 @@ public class ExchangeRateController : ControllerBase
     private readonly ICompareExchangeRatesService _compareService;
 
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExchangeRateController"/> class.
+    /// </summary>
+    /// <param name="logger">Logger for logging information and errors.</param>
+    /// <param name="validator">Validator for validating incoming requests.</param>
+    /// <param name="compareService">Service to compare exchange rate offers from different providers.</param>
     public ExchangeRateController
     (
         ILogger<ExchangeRateController> logger,
@@ -28,6 +37,17 @@ public class ExchangeRateController : ControllerBase
         _compareService = compareService;
     }
 
+    /// <summary>
+    /// Compares exchange rate offers from multiple external APIs and returns the best one.
+    /// </summary>
+    /// <param name="request">The exchange rate request containing source currency, target currency, and amount.</param>
+    /// <returns>
+    /// Returns the best exchange rate offer found. 
+    /// Returns 400 if validation fails, or 404 if no valid offer is available.
+    /// </returns>
+    /// <response code="200">Returns the best exchange rate offer.</response>
+    /// <response code="400">If the request is invalid.</response>
+    /// <response code="404">If no valid exchange rate offers are available.</response>
     [HttpPost("compare")]
     public async Task<IActionResult> Compare([FromBody] ExchangeRateRequest request)
     {
