@@ -1,6 +1,7 @@
+using ExchangeRateOffers.Api.Application;
 using ExchangeRateOffers.Api.Application.Interfaces.Services;
 using ExchangeRateOffers.Api.Application.Services;
-using ExchangeRateOffers.Api.Extension.DependencyInjectionExtension;
+using ExchangeRateOffers.Api.Infrastructure;
 using ExchangeRateOffers.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);

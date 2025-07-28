@@ -2,9 +2,9 @@
 using ExchangeRateOffers.Api.Infrastructure.Services;
 using System.Net.Http.Headers;
 
-namespace ExchangeRateOffers.Api.Extension.DependencyInjectionExtension;
+namespace ExchangeRateOffers.Api.Infrastructure;
 
-public static class InfrastrcutureExtension
+public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {

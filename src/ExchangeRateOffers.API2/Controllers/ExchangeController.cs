@@ -9,12 +9,12 @@ using System.Xml.Serialization;
 public class ExchangeController : ControllerBase
 {
     [HttpPost]
-    public IActionResult Post([FromBody] ExchangeRequest request)
+    public IActionResult Post([FromBody] Api2Request request)
     {
         Random random = new();
         var randomNumber = Math.Round((decimal)(random.NextDouble() * (double)request.Amount), 2);
 
-        var response = new ExchangeResponse { Result = randomNumber };
+        var response = new Api2Response { Result = randomNumber };
         return Ok(response);
     }
 }
