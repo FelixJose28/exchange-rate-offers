@@ -1,6 +1,18 @@
+using ExchangeRateOffers.Api.Application.Interfaces.Services;
+using ExchangeRateOffers.Api.Application.Services;
+using ExchangeRateOffers.Api.Extension.DependencyInjectionExtension;
+using ExchangeRateOffers.Api.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
+
+builder.Services.AddScoped<ICompareExchangeRatesService, CompareExchangeRatesService>();
+
+builder.Services.AddTransient<GlobalExceptioHandlerMiddleware>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -9,6 +21,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseMiddleware<GlobalExceptioHandlerMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
