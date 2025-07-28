@@ -135,7 +135,6 @@ Make sure you run it from the solution root (where the `.sln` is located).
 - Clean Architecture
 - FluentValidation
 - Swagger / Swashbuckle
-- Serilog logging
 - Custom exception handling middleware
 - Docker support
 
@@ -157,10 +156,4 @@ tests/
 
 ## 📬 Contact
 
-If you have questions or suggestions, feel free to reach out or open an issue.
-
----
-
-## 📝 License
-
-MIT License (optional - add a LICENSE file if needed)
+If you have questions or suggestions, feel free to reach out email fynfante or open an issue.
