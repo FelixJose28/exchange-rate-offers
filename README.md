@@ -4,6 +4,19 @@ This project is a .NET 8 Web API that compares remittance exchange rates from mu
 
 ---
 
+## ✅ Prerequisites
+
+Before running the project, ensure you have the following installed:
+
+- ✅ **.NET 8 SDK** (if running locally):  
+  [Install .NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+
+- ✅ **Docker** (if running in a container):  
+  [Install Docker](https://www.docker.com/products/docker-desktop)  
+  Docker must be installed and running.
+
+---
+
 ## 🚀 Features
 
 - Accepts a source currency, target currency, and amount.
@@ -135,7 +148,7 @@ src/
 ├── ExchangeRateOffers.Api/        # API project
 ├── Application/                   # Application services and interfaces
 ├── Domain/                        # Domain models and constants
-├── Infrastructure/               # API clients and providers
+├── Infrastructure/                # API clients and providers
 tests/
 ├── ExchangeRateOffers.Tests/     # Unit tests
 ```
