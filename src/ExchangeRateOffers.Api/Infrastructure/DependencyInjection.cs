@@ -15,12 +15,15 @@ public static class DependencyInjection
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
 
+        services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IApi1Client>());
+
         services.AddHttpClient<IApi2Client, Api2Client>(client =>
         {
             string api2Url = GetBaseUrl(configuration, "ExternalApis:Api2Url");
             client.BaseAddress = new Uri(api2Url);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
+        services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IApi2Client>());
 
         services.AddHttpClient<IApi3Client, Api3Client>(client =>
         {
@@ -28,6 +31,8 @@ public static class DependencyInjection
             client.BaseAddress = new Uri(api3Url);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
+
+        services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IApi3Client>());
 
         return services;
     }
