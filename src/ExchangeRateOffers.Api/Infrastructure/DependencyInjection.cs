@@ -1,4 +1,5 @@
 ﻿using ExchangeRateOffers.Api.Application.Interfaces.External;
+using ExchangeRateOffers.Api.Constants;
 using ExchangeRateOffers.Api.Infrastructure.Services;
 using System.Net.Http.Headers;
 
@@ -12,7 +13,7 @@ public static class DependencyInjection
         {
             string api1Url = GetBaseUrl(configuration, "ExternalApis:Api1Url");
             client.BaseAddress = new Uri(api1Url);
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(ContentTypes.ApplicationJson));
         });
 
         services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IErApiClient>());
@@ -21,7 +22,7 @@ public static class DependencyInjection
         {
             string api2Url = GetBaseUrl(configuration, "ExternalApis:Api2Url");
             client.BaseAddress = new Uri(api2Url);
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(ContentTypes.ApplicationJson));
         });
         services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IFawazCurrencyApiClient>());
 
@@ -29,7 +30,7 @@ public static class DependencyInjection
         {
             string api3Url = GetBaseUrl(configuration, "ExternalApis:Api3Url");
             client.BaseAddress = new Uri(api3Url);
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(ContentTypes.ApplicationJson));
         });
 
         services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IFrankfurterApiClient>());

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ExchangeRateOffers.Api.Constants;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
 
@@ -39,7 +40,7 @@ public class GlobalExceptioHandlerMiddleware : IMiddleware
             };
 
             string problemDetailString = JsonSerializer.Serialize(problemDetail);
-            context.Response.ContentType = "application/json";
+            context.Response.ContentType = ContentTypes.ApplicationJson;
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             await context.Response.WriteAsync(problemDetailString);
         }
