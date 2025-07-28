@@ -1,8 +1,6 @@
 ﻿using ExchangeRateOffers.Api.Application.Interfaces.External;
 using ExchangeRateOffers.Api.Domain.Entities;
-using System.Text;
 using System.Text.Json;
-using System.Xml;
 
 namespace ExchangeRateOffers.Api.Infrastructure.Services;
 

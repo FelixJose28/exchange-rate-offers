@@ -2,8 +2,8 @@
 
 public record Api3Response
 (
-    int StatusCode, 
-    string Message, 
+    int StatusCode,
+    string Message,
     Api3Data Data
 );
 

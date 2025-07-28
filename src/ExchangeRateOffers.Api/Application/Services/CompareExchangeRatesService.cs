@@ -1,11 +1,10 @@
 ﻿using ExchangeRateOffers.Api.Application.Interfaces.External;
 using ExchangeRateOffers.Api.Application.Interfaces.Services;
 using ExchangeRateOffers.Api.Domain.Entities;
-using ExchangeRateOffers.Api.Infrastructure.Services;
 
 namespace ExchangeRateOffers.Api.Application.Services;
 
-public class CompareExchangeRatesService: ICompareExchangeRatesService
+public class CompareExchangeRatesService : ICompareExchangeRatesService
 {
     private readonly IApi1Client _api1Client;
     private readonly IApi2Client _api2Client;
@@ -36,8 +35,8 @@ public class CompareExchangeRatesService: ICompareExchangeRatesService
             _api3Client.GetExchangeRateAsync(request)
         };
 
+        _logger.LogInformation($"Get the values from the apis");
         var results = await Task.WhenAll(tasks);
-
         return results
             .Where(r => r is not null)
             .OrderByDescending(r => r!.ConvertedAmount)

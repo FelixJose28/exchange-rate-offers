@@ -1,7 +1,6 @@
 ﻿using ExchangeRateOffers.Api.Application.Interfaces.Services;
 using ExchangeRateOffers.Api.Domain.Entities;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -20,7 +19,7 @@ public class ExchangeRateController : ControllerBase
     public ExchangeRateController
     (
         ILogger<ExchangeRateController> logger,
-        IValidator<ExchangeRateRequest> validator, 
+        IValidator<ExchangeRateRequest> validator,
         ICompareExchangeRatesService compareService
     )
     {
@@ -37,10 +36,10 @@ public class ExchangeRateController : ControllerBase
         {
             _logger.LogError
             (
-                "[{Time}] Validation failed, occurs an error in {@Location}: {@Errors}. HttpStatusCode: {@HttpStatusCode}. Request: {@Request}", 
+                "[{Time}] Validation failed, occurs an error in {@Location}: {@Errors}. HttpStatusCode: {@HttpStatusCode}. Request: {@Request}",
                 DateTime.Now,
                 $"Controller {nameof(ExchangeRateController)} method {nameof(Compare)}",
-                validationResult.Errors, 
+                validationResult.Errors,
                 HttpStatusCode.BadRequest,
                 request
             );
