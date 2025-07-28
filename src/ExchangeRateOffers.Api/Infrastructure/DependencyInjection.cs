@@ -17,9 +17,9 @@ public static class DependencyInjection
 
         services.AddHttpClient<IApi2Client, Api2Client>(client =>
         {
-            string api2Url = GetBaseUrl(configuration, "ExternalApis:Api2Url");
-            client.BaseAddress = new Uri(api2Url);
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
+            //string api2Url = GetBaseUrl(configuration, "ExternalApis:Api2Url");
+            //client.BaseAddress = new Uri(api2Url);
+            //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
 
         services.AddHttpClient<IApi3Client, Api3Client>(client =>

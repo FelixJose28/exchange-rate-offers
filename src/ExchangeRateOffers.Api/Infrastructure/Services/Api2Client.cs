@@ -1,6 +1,7 @@
 ﻿using ExchangeRateOffers.Api.Application.Interfaces.External;
 using ExchangeRateOffers.Api.Domain.Entities;
 using System.Text;
+using System.Text.Json;
 using System.Xml;
 
 namespace ExchangeRateOffers.Api.Infrastructure.Services;
@@ -14,30 +15,26 @@ public class Api2Client : IApi2Client
         _httpClient = httpClient;
     }
 
-    public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest request)
+    public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest exchangeRateRequest)
     {
-        string xmlPayload = $@"
-        <ExchangeRequest>
-          <From>{request.SourceCurrency}</From>
-          <To>{request.TargetCurrency}</To>
-          <Amount>{request.Amount}</Amount>
-        </ExchangeRequest>";
-
-        using var httpRequest = new HttpRequestMessage(HttpMethod.Post, "/exchange")
-        {
-            Content = new StringContent(xmlPayload, Encoding.UTF8, "application/xml")
-        };
-
-        using var response = await _httpClient.SendAsync(httpRequest);
+        string fullUrl = $"https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/{exchangeRateRequest.SourceCurrency.ToLower()}.json";
+        using var response = await _httpClient.GetAsync(fullUrl);
+        string content = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode) return null;
 
-        string content = await response.Content.ReadAsStringAsync();
-        var xml = new XmlDocument();
-        xml.LoadXml(content);
-        var resultNode = xml.SelectSingleNode("//Result");
+        var json = JsonSerializer.Deserialize<JsonElement>(content);
 
-        return decimal.TryParse(resultNode?.InnerText, out decimal result)
-            ? new ExchangeRateResponse("API2", result)
-            : null;
+        var sourceKey = exchangeRateRequest.SourceCurrency.ToLower();
+        var targetKey = exchangeRateRequest.TargetCurrency.ToLower();
+
+        if (json.TryGetProperty(sourceKey, out var ratesElement) &&
+            ratesElement.TryGetProperty(targetKey, out var rateElement) &&
+            rateElement.TryGetDecimal(out var rate))
+        {
+            decimal total = rate * exchangeRateRequest.Amount;
+            return new ExchangeRateResponse("API2", total);
+        }
+
+        return null;
     }
 }
