@@ -4,12 +4,12 @@ using System.Text.Json;
 
 namespace ExchangeRateOffers.Api.Infrastructure.Services;
 
-public class Api3Client : IApi3Client
+public class FrankfurterApiClient : IFrankfurterApiClient
 {
     private readonly HttpClient _httpClient;
-    private readonly ILogger<Api3Client> _logger;
+    private readonly ILogger<FrankfurterApiClient> _logger;
 
-    public Api3Client(HttpClient httpClient, ILogger<Api3Client> logger)
+    public FrankfurterApiClient(HttpClient httpClient, ILogger<FrankfurterApiClient> logger)
     {
         _httpClient = httpClient;
         _logger = logger;
@@ -17,7 +17,7 @@ public class Api3Client : IApi3Client
 
     public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest exchangeRateRequest)
     {
-        _logger.LogInformation($"Calling {nameof(Api3Client)}");
+        _logger.LogInformation($"Calling {nameof(FrankfurterApiClient)}");
         var source = exchangeRateRequest.SourceCurrency.ToUpper();
         var target = exchangeRateRequest.TargetCurrency.ToUpper();
         var amount = exchangeRateRequest.Amount;
@@ -34,7 +34,9 @@ public class Api3Client : IApi3Client
             ratesElement.TryGetProperty(target, out var rateElement) &&
             rateElement.TryGetDecimal(out var total))
         {
-            return new ExchangeRateResponse(nameof(Api3Client), total);
+            ExchangeRateResponse exchangeRateResponse = new(nameof(FrankfurterApiClient), total);
+            _logger.LogInformation("Successfully parsed exchange rate: {@ExchangeRateResponse}", exchangeRateResponse);
+            return exchangeRateResponse;
         }
 
         return null;

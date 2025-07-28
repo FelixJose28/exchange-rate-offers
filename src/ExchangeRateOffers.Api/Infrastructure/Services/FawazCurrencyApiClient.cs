@@ -4,12 +4,12 @@ using System.Text.Json;
 
 namespace ExchangeRateOffers.Api.Infrastructure.Services;
 
-public class Api2Client : IApi2Client
+public class FawazCurrencyApiClient : IFawazCurrencyApiClient
 {
     private readonly HttpClient _httpClient;
-    private readonly ILogger<Api2Client> _logger;
+    private readonly ILogger<FawazCurrencyApiClient> _logger;
 
-    public Api2Client(HttpClient httpClient, ILogger<Api2Client> logger)
+    public FawazCurrencyApiClient(HttpClient httpClient, ILogger<FawazCurrencyApiClient> logger)
     {
         _httpClient = httpClient;
         _logger = logger;
@@ -17,7 +17,7 @@ public class Api2Client : IApi2Client
 
     public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest exchangeRateRequest)
     {
-        _logger.LogInformation($"Calling {nameof(Api2Client)}");
+        _logger.LogInformation($"Calling {nameof(FawazCurrencyApiClient)}");
         string fullUrl = $"{exchangeRateRequest.SourceCurrency.ToLower()}.json";
         using var response = await _httpClient.GetAsync(fullUrl);
         if (!response.IsSuccessStatusCode) return null;
@@ -34,7 +34,9 @@ public class Api2Client : IApi2Client
             rateElement.TryGetDecimal(out var rate))
         {
             decimal total = rate * exchangeRateRequest.Amount;
-            return new ExchangeRateResponse(nameof(Api2Client), total);
+            ExchangeRateResponse exchangeRateResponse = new(nameof(FawazCurrencyApiClient), total);
+            _logger.LogInformation("Successfully parsed exchange rate: {@ExchangeRateResponse}", exchangeRateResponse);
+            return exchangeRateResponse;
         }
 
         return null;

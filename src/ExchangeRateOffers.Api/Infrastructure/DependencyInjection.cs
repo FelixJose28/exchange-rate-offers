@@ -8,31 +8,31 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient<IApi1Client, Api1Client>(client =>
+        services.AddHttpClient<IErApiClient, ErApiClient>(client =>
         {
             string api1Url = GetBaseUrl(configuration, "ExternalApis:Api1Url");
             client.BaseAddress = new Uri(api1Url);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
 
-        services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IApi1Client>());
+        services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IErApiClient>());
 
-        services.AddHttpClient<IApi2Client, Api2Client>(client =>
+        services.AddHttpClient<IFawazCurrencyApiClient, FawazCurrencyApiClient>(client =>
         {
             string api2Url = GetBaseUrl(configuration, "ExternalApis:Api2Url");
             client.BaseAddress = new Uri(api2Url);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
-        services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IApi2Client>());
+        services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IFawazCurrencyApiClient>());
 
-        services.AddHttpClient<IApi3Client, Api3Client>(client =>
+        services.AddHttpClient<IFrankfurterApiClient, FrankfurterApiClient>(client =>
         {
             string api3Url = GetBaseUrl(configuration, "ExternalApis:Api3Url");
             client.BaseAddress = new Uri(api3Url);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
 
-        services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IApi3Client>());
+        services.AddScoped<IExchangeRateProvider>(sp => sp.GetRequiredService<IFrankfurterApiClient>());
 
         return services;
     }

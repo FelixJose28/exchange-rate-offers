@@ -4,12 +4,12 @@ using System.Text.Json;
 
 namespace ExchangeRateOffers.Api.Infrastructure.Services;
 
-public class Api1Client : IApi1Client
+public class ErApiClient : IErApiClient
 {
     private readonly HttpClient _httpClient;
-    private readonly ILogger<Api1Client> _logger;
+    private readonly ILogger<ErApiClient> _logger;
 
-    public Api1Client(HttpClient httpClient, ILogger<Api1Client> logger)
+    public ErApiClient(HttpClient httpClient, ILogger<ErApiClient> logger)
     {
         _httpClient = httpClient;
         _logger = logger;
@@ -17,7 +17,7 @@ public class Api1Client : IApi1Client
 
     public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest exchangeRateRequest)
     {
-        _logger.LogInformation($"Calling {nameof(Api1Client)}");
+        _logger.LogInformation($"Calling {nameof(ErApiClient)}");
         string fullUrl = $"{exchangeRateRequest.SourceCurrency.ToUpper()}";
         using var response = await _httpClient.GetAsync(fullUrl);
         var content = await response.Content.ReadAsStringAsync();
@@ -30,7 +30,9 @@ public class Api1Client : IApi1Client
             rateElement.TryGetDecimal(out var rate))
         {
             decimal total = rate * exchangeRateRequest.Amount;
-            return new ExchangeRateResponse(nameof(Api1Client), total);
+            ExchangeRateResponse exchangeRateResponse = new(nameof(ErApiClient), total);
+            _logger.LogInformation("Successfully parsed exchange rate: {@ExchangeRateResponse}", exchangeRateResponse);
+            return exchangeRateResponse;
         }
 
         return null;
