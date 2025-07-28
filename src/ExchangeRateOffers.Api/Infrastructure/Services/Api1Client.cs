@@ -11,6 +11,7 @@ namespace ExchangeRateOffers.Api.Infrastructure.Services;
 public class Api1Client: IApi1Client
 {
     private readonly HttpClient _httpClient;
+    private const string BaseUrl = "https://open.er-api.com/v6/latest";
 
     public Api1Client(HttpClient httpClient)
     {
@@ -19,27 +20,24 @@ public class Api1Client: IApi1Client
 
     public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest  exchangeRateRequest)
     {
-        using HttpRequestMessage request = new(HttpMethod.Post, $"/exchange");
-
-        var payload = new
-        {
-            from = exchangeRateRequest.SourceCurrency,
-            to = exchangeRateRequest.TargetCurrency,
-            value = exchangeRateRequest.Amount
-        };
-        string jsonPayload = JsonSerializer.Serialize(payload);
-        request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
+        string fullUrl = $"{BaseUrl}/{exchangeRateRequest.SourceCurrency.ToUpper()}";
+        using HttpRequestMessage request = new(HttpMethod.Get, fullUrl);
         using var response = await _httpClient.SendAsync(request);
         var statusCode = response.StatusCode;
         var contentString = await response.Content.ReadAsStringAsync();
 
 
-        if (!response.IsSuccessStatusCode) return null;
+        var content = await response.Content.ReadAsStringAsync();
+        var json = JsonSerializer.Deserialize<JsonElement>(content);
 
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var result = JsonSerializer.Deserialize<Api1Response>(contentString, options);
+        if (json.TryGetProperty("rates", out var ratesElement) &&
+            ratesElement.TryGetProperty(exchangeRateRequest.TargetCurrency.ToUpper(), out var rateElement) &&
+            rateElement.TryGetDecimal(out var rate))
+        {
+            decimal total = rate * exchangeRateRequest.Amount;
+            return new ExchangeRateResponse("API1", total);
+        }
 
-        return result is null ? null : new ExchangeRateResponse("API1", result.Rate);
+        return null;
     }
 }

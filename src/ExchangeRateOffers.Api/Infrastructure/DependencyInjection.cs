@@ -10,8 +10,8 @@ public static class DependencyInjection
     {
         services.AddHttpClient<IApi1Client, Api1Client>(client =>
         {
-            string api1Url = GetBaseUrl(configuration, "ExternalApis:Api1Url");
-            client.BaseAddress = new Uri(api1Url);
+            //string api1Url = GetBaseUrl(configuration, "ExternalApis:Api1Url");
+            //client.BaseAddress = new Uri(api1Url);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         });
 
