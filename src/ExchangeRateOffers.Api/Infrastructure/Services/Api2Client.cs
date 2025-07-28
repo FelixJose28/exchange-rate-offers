@@ -19,8 +19,9 @@ public class Api2Client : IApi2Client
     {
         string fullUrl = $"https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/{exchangeRateRequest.SourceCurrency.ToLower()}.json";
         using var response = await _httpClient.GetAsync(fullUrl);
-        string content = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode) return null;
+
+        string content = await response.Content.ReadAsStringAsync();
 
         var json = JsonSerializer.Deserialize<JsonElement>(content);
 

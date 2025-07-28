@@ -15,32 +15,28 @@ public class Api3Client : IApi3Client
         _httpClient = httpClient;
     }
 
-    public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest request)
+    public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest exchangeRateRequest)
     {
-        var payload = new Api3Request
-        {
-            Exchange = new Api3RequestData
-            {
-                SourceCurrency = request.SourceCurrency,
-                TargetCurrency = request.TargetCurrency,
-                Quantity = request.Amount
-            }
-        };
+        var source = exchangeRateRequest.SourceCurrency.ToUpper();
+        var target = exchangeRateRequest.TargetCurrency.ToUpper();
+        var amount = exchangeRateRequest.Amount;
 
-        string json = JsonSerializer.Serialize(payload);
+        string url = $"https://api.frankfurter.app/latest?amount={amount}&from={source}&to={target}";
 
-        using var httpRequest = new HttpRequestMessage(HttpMethod.Post, "/exchange")
-        {
-            Content = new StringContent(json, Encoding.UTF8, "application/json")
-        };
-
-        using var response = await _httpClient.SendAsync(httpRequest);
+        using var response = await _httpClient.GetAsync(url);
         string content = await response.Content.ReadAsStringAsync();
+
         if (!response.IsSuccessStatusCode) return null;
 
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var result = JsonSerializer.Deserialize<Api3Response>(content, options);
+        var json = JsonSerializer.Deserialize<JsonElement>(content);
 
-        return result == null ? null : new ExchangeRateResponse("API3",result.Data.Total);
+        if (json.TryGetProperty("rates", out var ratesElement) &&
+            ratesElement.TryGetProperty(target, out var rateElement) &&
+            rateElement.TryGetDecimal(out var total))
+        {
+            return new ExchangeRateResponse("API3", total);
+        }
+
+        return null;
     }
 }
