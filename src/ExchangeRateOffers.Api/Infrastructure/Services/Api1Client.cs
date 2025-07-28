@@ -11,15 +11,18 @@ namespace ExchangeRateOffers.Api.Infrastructure.Services;
 public class Api1Client: IApi1Client
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<Api1Client> _logger;
     private const string BaseUrl = "https://open.er-api.com/v6/latest";
 
-    public Api1Client(HttpClient httpClient)
+    public Api1Client(HttpClient httpClient, ILogger<Api1Client> logger)
     {
         _httpClient = httpClient;
+        _logger = logger;
     }
 
     public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest  exchangeRateRequest)
     {
+        _logger.LogInformation($"Calling {nameof(Api1Client)}");
         string fullUrl = $"{BaseUrl}/{exchangeRateRequest.SourceCurrency.ToUpper()}";
         using HttpRequestMessage request = new(HttpMethod.Get, fullUrl);
         using var response = await _httpClient.SendAsync(request);
@@ -35,7 +38,7 @@ public class Api1Client: IApi1Client
             rateElement.TryGetDecimal(out var rate))
         {
             decimal total = rate * exchangeRateRequest.Amount;
-            return new ExchangeRateResponse("API1", total);
+            return new ExchangeRateResponse(nameof(Api1Client), total);
         }
 
         return null;

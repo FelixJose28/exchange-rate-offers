@@ -1,6 +1,7 @@
 ﻿using ExchangeRateOffers.Api.Application.Interfaces.External;
 using ExchangeRateOffers.Api.Application.Interfaces.Services;
 using ExchangeRateOffers.Api.Domain.Entities;
+using ExchangeRateOffers.Api.Infrastructure.Services;
 
 namespace ExchangeRateOffers.Api.Application.Services;
 
@@ -9,19 +10,25 @@ public class CompareExchangeRatesService: ICompareExchangeRatesService
     private readonly IApi1Client _api1Client;
     private readonly IApi2Client _api2Client;
     private readonly IApi3Client _api3Client;
+    private readonly ILogger<CompareExchangeRatesService> _logger;
 
-    public CompareExchangeRatesService(
+    public CompareExchangeRatesService
+    (
         IApi1Client api1Client,
         IApi2Client api2Client,
-        IApi3Client api3Client)
+        IApi3Client api3Client,
+        ILogger<CompareExchangeRatesService> logger
+    )
     {
         _api1Client = api1Client;
         _api2Client = api2Client;
         _api3Client = api3Client;
+        _logger = logger;
     }
 
     public async Task<ExchangeRateResponse?> GetBestRateAsync(ExchangeRateRequest request)
     {
+        _logger.LogInformation($"Calling the apis");
         var tasks = new List<Task<ExchangeRateResponse?>>
         {
             _api1Client.GetExchangeRateAsync(request),

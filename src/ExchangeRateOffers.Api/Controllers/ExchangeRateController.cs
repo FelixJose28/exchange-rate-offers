@@ -56,11 +56,29 @@ public class ExchangeRateController : ControllerBase
             return BadRequest(problemDetails);
         }
 
-        var bestOffer = await _compareService.GetBestRateAsync(request);
+        ExchangeRateResponse? bestOffer = await _compareService.GetBestRateAsync(request);
 
         if (bestOffer is null)
         {
-            return NotFound("No valid exchange rate offers available.");
+            _logger.LogWarning
+             (
+                "[{Time}] No valid exchange rate offers are available at the moment in {@Location}: {@Errors}. HttpStatusCode: {@HttpStatusCode}. Request: {@Request}",
+                DateTime.Now,
+                $"Controller {nameof(ExchangeRateController)} method {nameof(Compare)}",
+                validationResult.Errors,
+                HttpStatusCode.BadRequest,
+                request
+             );
+
+            ProblemDetails problemDetails = new()
+            {
+                Status = StatusCodes.Status404NotFound,
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+                Title = "No offers found",
+                Detail = "No valid exchange rate offers are available at the moment."
+            };
+
+            return NotFound(problemDetails);
         }
 
         return Ok(bestOffer);

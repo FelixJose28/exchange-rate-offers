@@ -9,14 +9,17 @@ namespace ExchangeRateOffers.Api.Infrastructure.Services;
 public class Api3Client : IApi3Client
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<Api2Client> _logger;
 
-    public Api3Client(HttpClient httpClient)
+    public Api3Client(HttpClient httpClient, ILogger<Api2Client> logger)
     {
         _httpClient = httpClient;
+        _logger = logger;
     }
 
     public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest exchangeRateRequest)
     {
+        _logger.LogInformation($"Calling {nameof(Api3Client)}");
         var source = exchangeRateRequest.SourceCurrency.ToUpper();
         var target = exchangeRateRequest.TargetCurrency.ToUpper();
         var amount = exchangeRateRequest.Amount;
@@ -34,7 +37,7 @@ public class Api3Client : IApi3Client
             ratesElement.TryGetProperty(target, out var rateElement) &&
             rateElement.TryGetDecimal(out var total))
         {
-            return new ExchangeRateResponse("API3", total);
+            return new ExchangeRateResponse(nameof(Api3Client), total);
         }
 
         return null;
