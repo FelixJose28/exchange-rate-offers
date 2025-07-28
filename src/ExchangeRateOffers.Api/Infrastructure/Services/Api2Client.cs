@@ -18,7 +18,7 @@ public class Api2Client : IApi2Client
     public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest exchangeRateRequest)
     {
         _logger.LogInformation($"Calling {nameof(Api2Client)}");
-        string fullUrl = $"https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/{exchangeRateRequest.SourceCurrency.ToLower()}.json";
+        string fullUrl = $"{exchangeRateRequest.SourceCurrency.ToLower()}.json";
         using var response = await _httpClient.GetAsync(fullUrl);
         if (!response.IsSuccessStatusCode) return null;
 

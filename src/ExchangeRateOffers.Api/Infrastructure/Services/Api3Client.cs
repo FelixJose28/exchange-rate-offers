@@ -7,9 +7,9 @@ namespace ExchangeRateOffers.Api.Infrastructure.Services;
 public class Api3Client : IApi3Client
 {
     private readonly HttpClient _httpClient;
-    private readonly ILogger<Api2Client> _logger;
+    private readonly ILogger<Api3Client> _logger;
 
-    public Api3Client(HttpClient httpClient, ILogger<Api2Client> logger)
+    public Api3Client(HttpClient httpClient, ILogger<Api3Client> logger)
     {
         _httpClient = httpClient;
         _logger = logger;
@@ -22,8 +22,7 @@ public class Api3Client : IApi3Client
         var target = exchangeRateRequest.TargetCurrency.ToUpper();
         var amount = exchangeRateRequest.Amount;
 
-        string url = $"https://api.frankfurter.app/latest?amount={amount}&from={source}&to={target}";
-
+        string url = $"/latest?amount={amount}&from={source}&to={target}";
         using var response = await _httpClient.GetAsync(url);
         string content = await response.Content.ReadAsStringAsync();
 

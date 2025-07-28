@@ -18,12 +18,11 @@ public class Api1Client : IApi1Client
     public async Task<ExchangeRateResponse?> GetExchangeRateAsync(ExchangeRateRequest exchangeRateRequest)
     {
         _logger.LogInformation($"Calling {nameof(Api1Client)}");
-        string baseUrl = "https://open.er-api.com/v6/latest";
-        string fullUrl = $"{baseUrl}/{exchangeRateRequest.SourceCurrency.ToUpper()}";
+        string fullUrl = $"{exchangeRateRequest.SourceCurrency.ToUpper()}";
         using var response = await _httpClient.GetAsync(fullUrl);
+        var content = await response.Content.ReadAsStringAsync();
         if (!response.IsSuccessStatusCode) return null;
 
-        var content = await response.Content.ReadAsStringAsync();
         var json = JsonSerializer.Deserialize<JsonElement>(content);
 
         if (json.TryGetProperty("rates", out var ratesElement) &&

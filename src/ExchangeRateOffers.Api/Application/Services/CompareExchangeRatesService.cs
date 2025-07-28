@@ -36,7 +36,9 @@ public class CompareExchangeRatesService : ICompareExchangeRatesService
         };
 
         _logger.LogInformation($"Get the values from the apis");
+
         var results = await Task.WhenAll(tasks);
+        
         return results
             .Where(r => r is not null)
             .OrderByDescending(r => r!.ConvertedAmount)
